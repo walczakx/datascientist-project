@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  pipeline:
+    build: ./pipeline
+    volumes:
+      - ./landing_zone:/landing_zone
+      - ./data_lake:/data_lake
+    environment:
+      - MONGO_HOST=db
+      - MONGO_PORT=27017
+      - MONGO_DB=${MONGO_DB}
+      - MONGO_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
+      - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+    depends_on:
+      - db
+
+  db:
+    image: mongo:latest
+    volumes:
+      - ./db_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_DB}
